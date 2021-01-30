@@ -12,23 +12,30 @@ __author_class__ = "8th"
 
 from tkinter import *
 import pafy
-import youtube_dl
 import os
 import requests
 from tkinter import messagebox
 
 # ----------------------------------------------------------------------------------- #
 
+# --- getting current directory and defining some variables --- #
+
+cuurent_dir = os.getcwd()
+main_url = ''
+formatt = ''
+
+# --------------------------------- #
+
 # ------------------- MAIN FUNCTION TO PLAY MUSIC ------------------- #
 
-def play(file):
-    os.system('ffplay -autoexit -vn -nodisp "{}"'.format(file))
-    try:
-        os.remove(file)
-    except:
-        pass
+def play(pth_dir,file):
+    if formatt == "with video":
+        os.system(f'{pth_dir}\\ffplay -autoexit "{file}"')
+    else:
+        os.system(f'{pth_dir}\\ffplay -autoexit -vn -nodisp "{file}"')
 
 # ------------------------------------------------------------------- #
+
 
 # ------------------- EXTRACT URL FUNCTION ------------------- #
 
@@ -57,10 +64,13 @@ def Extract(topic):
 # -------------------  Basic GUI Setup -------------------  #
 
 root = Tk()
+root.title("     "*10+"Music Downloader")
 root.geometry("500x400")
-root.title('     '*10+'Music Streamer')
 root.resizable(False,False)
-root.wm_iconbitmap('F:\\Music Streamer\\Music Streamer GUI\\icon.ico')
+try:
+    root.wm_iconbitmap('F:\\Music Streamer\\Music Streamer GUI\\icon.ico')
+except:
+    pass
 guide = Label(root,text="Please enter the name of the song below:-")
 spce = Label(root,text=" ")
 guide.pack()
@@ -70,43 +80,44 @@ name.pack()
 
 # --------------------------------------------------------- #
 
+# ---- Spacing and organising ---- #
+
+space2 = Label(root,text=" ")
+space2.pack()
+
+# -------------------------------- #
+
+# ----- Dropdown list ---- #
+
+variable = StringVar(root)
+variable.set("Choose the format.") # default value
+w = OptionMenu(root, variable, "with video", "without video")
+w.pack()
+
+# ------------------------ #
+
 
 # ------------------- Basic Variables ------------------- #
 
 url = ''
-ytdl_options = {
-    'format': 'bestaudio'
-}
 title = ''
 
 # ------------------------------------------------------- #
 
-
-# ------------------- Changing directory ------------------- #
-
-os.chdir('/')
-path = os.environ['USERPROFILE']
-os.chdir(f'{path}\\AppData\\Local\\Temp')
-
-# ---------------------------------------------------------- #
-
-
 # ------------------- Function to get the user input from the GUI Window ------------------- #
 
 def get_input():
-    global url,title
+    global url,title,best,main_url,formatt
     url = Extract(name.get(1.0,END))
-    with youtube_dl.YoutubeDL(ytdl_options) as ytdl:
-        ytdl.download([url])
+    formatt=variable.get()
     try:
         video = pafy.new(url)
+        best = video.getbest()
+        main_url = best.url
         print(video.title)
-        title = ''
-        for i in range(8):
-            title += video.title[i]
     except:
         messagebox.showinfo("Error","Cannot Connect.. Internet not connected or invalid URL or id.")  
-    get_start()
+    play(cuurent_dir,main_url)
     
 # ------------------------------------------------------------------------------------------- #
 
@@ -118,21 +129,6 @@ def destroy():
     exit()
 
 # ----------------------------------------------------- #
-
-
-# ------------------- Function which will manage all other functions and initiate the playing ------------------- #
-
-def get_start():
-    files = os.listdir()
-    main = []
-    for i in files:
-        if i.endswith('.webm') or i.endswith('.mp3') or i.endswith('.m4a'):
-            if title in i:
-                main.append(i)
-    for file in main:
-        play(file)
-
-# --------------------------------------------------------------------------------------------------------------- #
 
 
 # ------------------- Creating some space between the text input area and the button ------------------- #
@@ -154,7 +150,7 @@ stream.pack()
 
 # ------------------- Exit Button ------------------- #
 
-# -- ading space -- #
+# -- adding space -- #
 
 space1.pack()
 
