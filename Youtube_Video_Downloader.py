@@ -1,5 +1,5 @@
 from tkinter import *
-import youtube_dl
+import youtube_dl # pip install youtube_dl
 import ctypes  
 
 root = Tk()
