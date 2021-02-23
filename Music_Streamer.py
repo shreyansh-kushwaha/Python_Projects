@@ -64,7 +64,7 @@ def Extract(topic):
 # -------------------  Basic GUI Setup -------------------  #
 
 root = Tk()
-root.title("     "*10+"Music Downloader")
+root.title("     "*10+"Music Streamer")
 root.geometry("500x400")
 root.resizable(False,False)
 try:
