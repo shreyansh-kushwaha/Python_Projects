@@ -78,16 +78,3 @@ exit_btn = Button(root,text='     Exit     ',command=exit_app)
 exit_btn.pack()
 
 root.mainloop()
-
-
-# from tkinter import *
-
-# master = Tk()
-
-# variable = StringVar(master)
-# variable.set("one") # default value
-
-# w = OptionMenu(master, variable, "one", "two", "three")
-# w.pack()
-
-# mainloop()
